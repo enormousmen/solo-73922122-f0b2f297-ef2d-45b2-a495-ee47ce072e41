@@ -159,4 +159,11 @@ cat "$WORK/seg_4.bin" "$WORK/seg_5.bin" "$WORK/seg_6.bin" > "$WORK/exp_restart"
 cat "$WORK"/r* > "$WORK/got_restart"
 cmp "$WORK/exp_restart" "$WORK/got_restart" && echo "  OK: 重新起播后读到的 == 片4+片5+片6 原始字节"
 
+say "10. 状态接口"
+curl -sS "$BASE/v1/state" | python3 -c '
+import sys, json
+st = json.load(sys.stdin)
+print("  code=%s oldest=%s newest=%s earliest_playable=%s" % (
+    st["code"], st["oldest_seq"], st["newest_seq"], st["earliest_playable"]))'
+
 say "演示完成"
