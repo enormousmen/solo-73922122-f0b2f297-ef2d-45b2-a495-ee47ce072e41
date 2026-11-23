@@ -1,0 +1,24 @@
+services:
+  recorder:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # 槽位数可配；演示用小数值让覆盖更快发生
+      SLOT_COUNT: "4"
+      DATA_DIR: /data
+    volumes:
+      - recdata:/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request;urllib.request.urlopen('http://localhost:8000/healthz')"
+      interval: 5s
+      timeout: 2s
+      retries: 12
+      start_period: 5s
+
+volumes:
+  recdata:
